@@ -16,6 +16,13 @@
 
 
         <h3>Add a New Campaign</h3>
+        @if ($errors->has())
+            <div class="alert alert-danger">
+                @foreach ($errors->all() as $error)
+                    {{ $error }}<br>
+                @endforeach
+            </div>
+        @endif
 
         <form method="POST" action="/campaigns/store">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">

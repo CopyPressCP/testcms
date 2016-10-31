@@ -6,6 +6,7 @@ use App\Campaign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use \Validator;
 
 use App\Http\Requests;
 
@@ -41,14 +42,30 @@ class CampaignsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $rules = array(
             'name' => 'required|max:255',
             'body' => 'required',
             'assigned_date' => 'required',
             'start_date' => 'required',
-            'due_date' => 'required',
-        ]);
+            'due_date' => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
 
+        if ($validator->fails()){
+            $messages = $validator->messages();
+
+            return back()->withErrors($validator);
+        }
+//        $this->validate($request, [
+//            'name' => 'required|max:255',
+//            'body' => 'required',
+//            'assigned_date' => 'required',
+//            'start_date' => 'required',
+//            'due_date' => 'required',
+//        ]);
+
+
+    else {
         $campaign = new Campaign;
         $campaign->creation_user_id = Auth::user()->user_id;
         $campaign->name = $request->get('name');
@@ -59,7 +76,7 @@ class CampaignsController extends Controller
         //dd($request);
 
         $campaign->save();
-
+    }
         return back();
     }
 
