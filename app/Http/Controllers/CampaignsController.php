@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Campaign;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
@@ -40,12 +41,22 @@ class CampaignsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'body' => 'required',
+            'assigned_date' => 'required',
+            'start_date' => 'required',
+            'due_date' => 'required',
+        ]);
+
         $campaign = new Campaign;
-        //dd($request['name']);
-       // $campaign->name = $request->get('name');
-        $campaign->name       = Input::get('name');
-        $campaign->default_article_type = Input::get('name');
-        //$campaign->default_article_type = $request['default_article_type'];
+        $campaign->creation_user_id = Auth::user()->user_id;
+        $campaign->name = $request->get('name');
+        $campaign->default_article_type = $request->get('default_article_type');
+        $campaign->assigned_date = $request->get('assigned_date');
+        $campaign->start_date = $request->get('start_date');
+        $campaign->due_date = $request->get('due_date');
+        //dd($request);
 
         $campaign->save();
 
