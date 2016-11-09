@@ -16,6 +16,7 @@ Route::group(['middleware' => ['web']], function(){
         return redirect('/');
     });
 
+
     Route::get('/', 'PagesController@home');
     Route::get('/about', 'PagesController@about');
 
@@ -24,6 +25,14 @@ Route::group(['middleware' => ['web']], function(){
     Route::get('campaigns','CampaignsController@index');
     Route::post('campaigns/store','CampaignsController@store');
 
+
+    //Route::get('clients/auto-complete','ClientsController@clients_auto_complete');
+
+    Route::get('/clients_auto_complete',
+        [
+        'as' => '/clients_auto_complete',
+        'uses' => 'ClientsController@clients_auto_complete'
+        ]);
 
     Route::get('cards', 'CardsController@index');
     Route::get('cards/{card}', 'CardsController@show');

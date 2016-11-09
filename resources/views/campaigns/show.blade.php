@@ -16,13 +16,7 @@
 
 
         <h3>Add a New Campaign</h3>
-        @if ($errors->has())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    {{ $error }}<br>
-                @endforeach
-            </div>
-        @endif
+
 
         <form method="POST" action="/campaigns/store">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -31,7 +25,15 @@
         </div>
 
         <div class="form-group">
-            Client : <select type="text" id="client" name="client" class="form-control">{{ old('client') }}</select>
+            <input type="hidden" id="client_id" value="">
+            Client : <input type="text" id="client" class="typeahead form-control">
+            {{--<select type="text" id="client" name="client" class="form-control">--}}
+                        {{--@foreach($all_clients as $client)--}}
+                            {{--<option>--}}
+                                {{--{{$client->client_id}} | {{$client->first_name}} {{$client->last_name}}--}}
+                            {{--</option>--}}
+                        {{--@endforeach--}}
+                    {{--</select>--}}
         </div>
 
         <div class="form-group">
@@ -67,6 +69,16 @@
     </div>
 
         </form>
+        @if (count($errors))
+
+            <ul>@foreach ($errors->all() as $error)
+
+                    <li>{{ $error }}</li>
+
+                @endforeach
+            </ul>
+
+        @endif
 
     <script> $(function () {
             $('#assigned_date, #start_date, #due_date').each(function() {
@@ -76,7 +88,31 @@
                 });
             });
         });
+
+        var path = "{{ route('/clients_auto_complete') }}";
+        $('#client').typeahead({
+            minLength: 2,
+            highlight: true,
+//            hint: true,
+            source: function (query, process) {
+                clients=[];
+                map = {};
+                 $.get(path, { query: query }, function (data) {
+                    $.each(data, function(i, client){
+                        map[client.first_name] = client;
+                        clients.push(client.first_name);
+                    });
+                     process(clients);
+                     });
+            },
+            updater: function(item) {
+                $('#client').html(map[item].client_id+" | "+ map[item].first_name);
+                return item;
+            }
+        });
     </script>
+
+
 @stop
 
 

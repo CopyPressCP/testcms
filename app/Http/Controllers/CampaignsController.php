@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Campaign;
+use App\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -20,8 +21,11 @@ class CampaignsController extends Controller
     public function index()
     {
         $campaigns = Campaign::all();
+        //$clients = $campaigns->clients();
+        $all_clients = Client::all();
 
-        return view('campaigns.show', compact('campaigns'));
+
+        return view('campaigns.show', compact('campaigns', 'all_clients'));
     }
 
     /**
@@ -42,41 +46,47 @@ class CampaignsController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = array(
-            'name' => 'required|max:255',
-            'body' => 'required',
-            'assigned_date' => 'required',
-            'start_date' => 'required',
-            'due_date' => 'required'
-        );
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()){
-            $messages = $validator->messages();
-
-            return back()->withErrors($validator);
-        }
-//        $this->validate($request, [
+//        dd($request);
+//        $rules = array(
 //            'name' => 'required|max:255',
 //            'body' => 'required',
 //            'assigned_date' => 'required',
 //            'start_date' => 'required',
-//            'due_date' => 'required',
+//            'due_date' => 'required'
+//        );
+//        $validator = Validator::make($request->all(), $rules);
+//
+//        if ($validator->fails()){
+//            $messages = $validator->messages();
+//
+//            return back()->withErrors($validator);
+//        }
+//        $this->validate($request, [
+//            'name' => 'required|max:255',
+//            'client' => 'required',
+//            'assigned_date' => 'required|date|after:today',
+//            'start_date' => 'required|date|before:due_date',
+//            'due_date' => 'required|date|after:start_date',
 //        ]);
 
 
-    else {
+
+       // $campaign = new Campaign(Input::all());
         $campaign = new Campaign;
         $campaign->creation_user_id = Auth::user()->user_id;
+        $campaign->client_id = preg_replace("/[^0-9]/",-1,$request->get('client'));
+        //dd($request);
+        //dd("client id: ". $campaign->client_id);
+        //$campaign->client_id = $request->get('client_id');
         $campaign->name = $request->get('name');
         $campaign->default_article_type = $request->get('default_article_type');
         $campaign->assigned_date = $request->get('assigned_date');
         $campaign->start_date = $request->get('start_date');
         $campaign->due_date = $request->get('due_date');
-        //dd($request);
 
+        //dd($campaign);
         $campaign->save();
-    }
+
         return back();
     }
 

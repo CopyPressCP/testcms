@@ -3,11 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 
 class ClientsController extends Controller
 {
+    public function clients_auto_complete(Request $request)
+    {
+        $query = $request->input('query');
+        $data = DB::table('clients')
+            ->select('client_id','first_name')
+            ->where("first_name",
+            "LIKE", "%".$query."%")
+            ->get();
+        return response()->json($data);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -83,4 +93,6 @@ class ClientsController extends Controller
     {
         //
     }
+
+
 }
