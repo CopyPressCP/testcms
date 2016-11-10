@@ -79,7 +79,7 @@ class CampaignsController extends Controller
         //dd("client id: ". $campaign->client_id);
         //$campaign->client_id = $request->get('client_id');
         $campaign->name = $request->get('name');
-        $campaign->default_article_type = $request->get('default_article_type');
+        $campaign->default_article_type = $request->input('default_article_type');
         $campaign->assigned_date = $request->get('assigned_date');
         $campaign->start_date = $request->get('start_date');
         $campaign->due_date = $request->get('due_date');

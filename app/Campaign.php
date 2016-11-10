@@ -8,7 +8,7 @@ class Campaign extends Model
 {
     protected $primaryKey = 'campaign_id';
 
-    protected $fillable = ['name','client_id','default_article_type','assigned_date','start_date','due_date'];
+    protected $fillable = ['name','client_id','assigned_date','start_date','due_date'];
 
 //
 //         'assigned_date','start_date','due_date','word_count','style_guide_url','amount',
