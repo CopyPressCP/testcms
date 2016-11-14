@@ -16,47 +16,64 @@
         @endforeach
 
 
-        <h3>Add a New Campaign</h3>
 
 
+        <label class="col-md-4 control-label">
+            <h3>Add a New Campaign</h3>
+        </label>
+        <div>
         <form method="POST" action="/campaigns/store" id="add_campaign_form">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <div class="form-group">
-            Name : <input type="text" id="name" name="name" class="form-control" placeholder="Name of the Campaign"></input>
-        </div>
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-        <div class="form-group">
-            <input type="hidden" id="client_id" value="">
-            Client : <input type="text" id="client" class="typeahead form-control" placeholder="Client">
-            {{--<select type="text" id="client" name="client" class="form-control">--}}
-                        {{--@foreach($all_clients as $client)--}}
-                            {{--<option>--}}
-                                {{--{{$client->client_id}} | {{$client->first_name}} {{$client->last_name}}--}}
-                            {{--</option>--}}
-                        {{--@endforeach--}}
-                    {{--</select>--}}
-        </div>
 
-        <div class="form-group">
-           Default Article Type: <input type="text" id="default_article_type" id="default_article_type" class="form-control"></input>
-        </div>
-
-        <div class="form-group">
-            <div class="input-group date" id="assigned_date_picker_class">
-               Assigned Date: <input type="text" id="assigned_date" name="assigned_date" class="form-control"/>{{ old('assigned_date') }}
+            <label class="col-md-4 control-label">Name</label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-pushpin"></i></span>
+                    <input  id="name" name="name" placeholder="Campaign Name" class="form-control"  type="text">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="input-group date" id="start_date_picker_class">
-                Start Date: <input type="text" id="start_date" name="start_date" class="form-control"/>{{ old('start_date') }}
-            </div>
-        </div>
 
-        <div class="form-group">
-            <div class="input-group date" id="due_date_picker_class">
-                Due Date: <input type="text" id="due_date" name="due_date" class="form-control"/>{{ old('due_date') }}
+            <label class="col-md-4 control-label">Client</label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-align-left"></i></span>
+                    <input type="hidden" id="client_id" value="">
+                    <input  id="client" name="client" placeholder="Client Name" class="typeahead form-control"  type="text">
+                </div>
             </div>
-        </div>
+
+            <label class="col-md-4 control-label">Default Article Type</label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i></span>
+                    <input  id="default_article_type" name="default_article_type" placeholder="Default Article Type" class="form-control"  type="text">
+                </div>
+            </div>
+
+            <label class="col-md-4 control-label">Assign Date</label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input  id="assigned_date" name="assigned_date" placeholder="Assigned Date" class="form-control"  type="text">
+                </div>
+            </div>
+
+            <label class="col-md-4 control-label">Start Date</label>
+            <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input  id="start_date" name="start_date" placeholder="Start Date" class="form-control"  type="text">
+                </div>
+            </div>
+
+            <label class="col-md-4 control-label">Due Date</label>
+            <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input  id="due_date" name="due_date" placeholder="Due Date" class="form-control"  type="text">
+                </div>
+            </div>
 
             {{--<textarea id="word_count" class="form-control">{{ old('body') }}</textarea>--}}
             {{--<textarea id="body" class="form-control">{{ old('body') }}</textarea>--}}
@@ -64,13 +81,19 @@
             {{--<textarea id="body" class="form-control">{{ old('body') }}</textarea>--}}
             {{--<textarea id="campaign_cost_structure" class="form-control">{{ old('body') }}</textarea>--}}
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary"> Add campaign</button>
-        </div>
-    </div>
+            <label class="col-md-4 control-label"></label>
+            <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                <button type="submit" class="btn btn-primary"> Add campaign</button>
+            </div>
+            </div>
 
         </form>
-        @if (count($errors))
+    </div>
+
+        </div>
+
+    @if (count($errors))
 
             <ul>@foreach ($errors->all() as $error)
 
@@ -108,6 +131,7 @@
             },
             updater: function(item) {
                 $('#client').html(map[item].client_id+" | "+ map[item].first_name);
+                //$('#client_id').val(map[item].client_id);
                 return item;
             }
         });
@@ -127,43 +151,49 @@
                                 min: 2,
                             },
                             notEmpty: {
-                                message: 'Please supply your first name'
+                                message: 'Please enter a name for the Campaign'
                             }
                         }
                     },
 
-                    comment: {
+                    assign_date: {
                         validators: {
-                            stringLength: {
-                                min: 10,
-                                max: 200,
-                                message:'Please enter at least 10 characters and no more than 200'
+                            date: {
+                                format: 'YYYY-MM-DD',
+                                message:'That is not a valid date, enter a valid date, please! '
                             },
                             notEmpty: {
-                                message: 'Please supply a description of your project'
+                                message: 'Please supply a valid date for this Campaign'
+                            }
+                        }
+                    },
+
+                    start_date: {
+                        validators: {
+                            date: {
+                                format: 'YYYY-MM-DD',
+                                message:'That is not a valid date, enter a valid date, please! '
+                            },
+                            notEmpty: {
+                                message: 'Please supply a valid date for this Campaign'
+                            }
+                        }
+                    },
+
+                    due_date: {
+                        validators: {
+                            date: {
+                                format: 'YYYY-MM-DD',
+                                message:'That is not a valid date, enter a valid date, please! '
+                            },
+                            notEmpty: {
+                                message: 'Please supply a valid date for this Campaign'
                             }
                         }
                     }
                 }
             })
-                    .on('success.form.bv', function(e) {
-                        $('#success_message').slideDown({ opacity: "show" }, "slow") // Do something ...
-                        $('#contact_form').data('bootstrapValidator').resetForm();
 
-                        // Prevent form submission
-                        e.preventDefault();
-
-                        // Get the form instance
-                        var $form = $(e.target);
-
-                        // Get the BootstrapValidator instance
-                        var bv = $form.data('bootstrapValidator');
-
-                        // Use Ajax to submit form data
-                        $.post($form.attr('action'), $form.serialize(), function(result) {
-                            console.log(result);
-                        }, 'json');
-                    });
         });
 
 
