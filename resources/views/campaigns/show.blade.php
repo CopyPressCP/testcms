@@ -39,7 +39,7 @@
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-align-left"></i></span>
                     <input type="hidden" id="client_id" value="">
-                    <input  id="client" name="client" placeholder="Client Name" class="typeahead form-control"  type="text">
+                    <input  id="client" name="client" placeholder="Client Name" class="typeahead form-control"  type="text" value="">
                 </div>
             </div>
 
@@ -75,12 +75,6 @@
                 </div>
             </div>
 
-            {{--<textarea id="word_count" class="form-control">{{ old('body') }}</textarea>--}}
-            {{--<textarea id="body" class="form-control">{{ old('body') }}</textarea>--}}
-            {{--<textarea id="body" class="form-control">{{ old('body') }}</textarea>--}}
-            {{--<textarea id="body" class="form-control">{{ old('body') }}</textarea>--}}
-            {{--<textarea id="campaign_cost_structure" class="form-control">{{ old('body') }}</textarea>--}}
-
             <label class="col-md-4 control-label"></label>
             <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
@@ -109,6 +103,8 @@
                 $(this).datepicker({
                     autoclose: true,
                     format: 'yyyy-mm-dd'
+                }).on('changeDate', function (e) {
+                    $(this).focus();
                 });
             });
         });
@@ -130,8 +126,7 @@
                      });
             },
             updater: function(item) {
-                $('#client').html(map[item].client_id+" | "+ map[item].first_name);
-                //$('#client_id').val(map[item].client_id);
+                $('#client').html(map[item].first_name);
                 return item;
             }
         });

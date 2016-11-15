@@ -6,6 +6,7 @@ use App\Campaign;
 use App\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use \Validator;
 
@@ -69,22 +70,16 @@ class CampaignsController extends Controller
 //            'due_date' => 'required|date|after:start_date',
 //        ]);
 
-
-
-       // $campaign = new Campaign(Input::all());
         $campaign = new Campaign;
+        $client = new Client;
         $campaign->creation_user_id = Auth::user()->user_id;
-        $campaign->client_id = preg_replace("/[^0-9]/",-1,$request->get('client'));
-        //dd($request);
-        //dd("client id: ". $campaign->client_id);
-        //$campaign->client_id = $request->get('client_id');
+        $campaign->client_id = DB::table('clients')->where('first_name',$request->get('client'))->value('client_id');
         $campaign->name = $request->get('name');
         $campaign->default_article_type = $request->input('default_article_type');
         $campaign->assigned_date = $request->get('assigned_date');
         $campaign->start_date = $request->get('start_date');
         $campaign->due_date = $request->get('due_date');
 
-        //dd($campaign);
         $campaign->save();
 
         return back();
