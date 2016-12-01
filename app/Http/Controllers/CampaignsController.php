@@ -63,7 +63,7 @@ class CampaignsController extends Controller
 //            return back()->withErrors($validator);
 //        }
 //        $this->validate($request, [
-//            'name' => 'required|max:255',
+//            'name' => 'required|max:255|unique',
 //            'client' => 'required',
 //            'assigned_date' => 'required|date|after:today',
 //            'start_date' => 'required|date|before:due_date',
@@ -71,7 +71,6 @@ class CampaignsController extends Controller
 //        ]);
 
         $campaign = new Campaign;
-        $client = new Client;
         $campaign->creation_user_id = Auth::user()->user_id;
         $campaign->client_id = DB::table('clients')->where('first_name',$request->get('client'))->value('client_id');
         $campaign->name = $request->get('name');
